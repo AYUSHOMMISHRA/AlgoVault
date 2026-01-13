@@ -963,6 +963,7 @@ For security issues, please email: praachirasane@gmail.com
 ### Stay Connected
 - 🌐 **Website**: [algovault.example.com](https://algovault.example.com)
 - 📧 **Email**:  connect.ayushommishra@gmail.com
+- 💼 **LinkedIn**: [AlgoVault](https://linkedin.com/company/algovault)
 ---
 
 <div align="center">
