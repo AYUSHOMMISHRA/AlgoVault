@@ -1,0 +1,157 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}AI Cryptography Assistant - AlgoVault{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'ChatBot/css/chatbot.css' %}">
+<style>
+    /* Hide floating widget on chatbot page */
+    .floating-chat-widget {
+        display: none !important;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="chatbot-container">
+    <!-- Header Section -->
+    <div class="chatbot-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="header-text">
+                                        <h1 class="page-title">
+                        AI Cryptography Assistant
+                    </h1>
+                    <p class="page-subtitle">
+                        Get instant help with cryptographic algorithms and concepts powered by Groq AI
+                    </p>
+                </div>
+                <div class="header-visual">
+                    <div class="ai-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat Interface -->
+    <div class="chat-interface">
+        <div class="container">
+            <div class="chat-wrapper">
+                <!-- Chat Messages Area -->
+                <div class="chat-messages" id="chatMessages">
+                    <!-- Welcome Message -->
+                    <div class="message bot-message">
+                        <div class="message-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="message-content">
+                            <div class="message-bubble">
+                                <p>Hello! I'm your AI cryptography assistant. Choose how you'd like to interact with me:</p>
+                                
+                                <!-- Mode Selection -->
+                                <div class="mode-selection">
+                                    <div class="mode-option" data-mode="learning">
+                                        <i class="fas fa-book-open"></i>
+                                        <div class="mode-content">
+                                            <h4>Learning Mode</h4>
+                                            <p>Ask questions, explore concepts, and learn about cryptographic algorithms</p>
+                                        </div>
+                                    </div>
+                                    <div class="mode-option" data-mode="quiz">
+                                        <i class="fas fa-brain"></i>
+                                        <div class="mode-content">
+                                            <h4>Test Yourself</h4>
+                                            <p>Take interactive quizzes to test your cryptography knowledge</p>
+                                        </div>
+                                    </div>
+                                    <div class="mode-option" data-mode="chat">
+                                        <i class="fas fa-comments"></i>
+                                        <div class="mode-content">
+                                            <h4>Interactive Chat</h4>
+                                            <p>Have an open conversation and ask any crypto-related questions directly</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <p style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-muted);">You can switch modes anytime by saying "learning mode", "quiz mode", or "interactive chat mode"</p>
+                            </div>
+                            <div class="message-time">
+                                <span id="welcomeTime"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Typing Indicator -->
+                <div class="typing-indicator" id="typingIndicator" style="display: none;">
+                    <div class="message-avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="typing-content">
+                        <div class="typing-bubble">
+                            <div class="typing-dots">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chat Input -->
+                <div class="chat-input-container">
+                    <div class="input-wrapper">
+                        <textarea 
+                            id="messageInput" 
+                            placeholder="Ask me anything about cryptography..."
+                            rows="1"
+                            maxlength="1000"
+                        ></textarea>
+                        <button id="sendButton" type="button" class="send-button">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                    <div class="input-footer">
+                        <span class="char-count">
+                            <span id="charCount">0</span>/1000
+                        </span>
+                        <span class="powered-by">
+                            Powered by <img src="https://cdn.brandfetch.io/idxygbEPCQ/w/201/h/201/theme/dark/icon.png?c=1bxid64Mup7aczewSAYMX&t=1668515712972" alt="Groq" style="height: 16px; width: auto; vertical-align: middle; margin-right: 2px;"> Groq AI
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Questions -->
+    <div class="quick-questions">
+        <div class="container">
+            <h3>Quick Questions</h3>
+            <div class="question-cards">
+                <div class="question-card" data-question="What is the Caesar cipher and how does it work?">
+                    <i class="fas fa-scroll"></i>
+                    <span>Caesar Cipher Basics</span>
+                </div>
+                <div class="question-card" data-question="How does AES encryption work?">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>AES Encryption</span>
+                </div>
+                <div class="question-card" data-question="What's the difference between MD5 and SHA-512?">
+                    <i class="fas fa-fingerprint"></i>
+                    <span>Hash Functions</span>
+                </div>
+                <div class="question-card" data-question="Explain the Diffie-Hellman key exchange">
+                    <i class="fas fa-key"></i>
+                    <span>Key Exchange</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'ChatBot/js/chatbot.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,42 @@
+/* static/css/des.css */
+/* Styles specific to the DES algorithm page content. */
+
+/* DES-specific input styling to match other algorithm pages */
+textarea, input[type="text"], select {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 1rem;
+    background-color: var(--input-bg);
+    color: var(--light-color);
+}
+
+textarea:focus, input[type="text"]:focus, select:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: var(--glow-effect);
+}
+
+/* DES-specific result styling */
+#result-section .result-box {
+    font-size: 0.9rem;      /* Slightly smaller font for the long hash string */
+    letter-spacing: 1px;   /* Add some space between characters */
+    line-height: 1.8;      /* Increase line height if the hash wraps */
+}
+
+/* Ensure the image in the 'About' section has a neutral background in case of transparency */
+#about .info-image img {
+    background-color: #ffffff; /* A white background for the diagram */
+    padding: 10px;             /* Add some padding around the image */
+    border: 1px solid var(--border-color); /* Use the theme's border color */
+}
+
+/* Style the icon for the hash generation button */
+#process-btn .fa-cog {
+    transition: transform 0.8s ease-in-out;
+}
+
+#process-btn:hover .fa-cog {
+    transform: rotate(360deg);
+}

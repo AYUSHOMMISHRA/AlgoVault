@@ -1,0 +1,321 @@
+/* static/css/vigenere.css */
+
+/* --- Vigenère Cipher specific styles --- */
+
+/* Vigenère-specific result box styling */
+#result-section .result-box {
+    font-size: 0.9rem;      /* Slightly smaller font for the long hash string */
+    letter-spacing: 1px;   /* Add some space between characters */
+    line-height: 1.8;      /* Increase line height if the hash wraps */
+}
+
+/* Ensure the image in the 'About' section has a neutral background in case of transparency */
+#about .info-image img {
+    background-color: #ffffff; /* A white background for the diagram */
+    padding: 10px;             /* Add some padding around the image */
+    border: 1px solid var(--border-color); /* Use the theme's border color */
+}
+
+/* Style the icon for the hash generation button */
+#process-btn .btn-icon .fa-cog {
+    transition: transform 0.8s ease-in-out;
+}
+
+#process-btn:hover .btn-icon .fa-cog {
+    transform: rotate(360deg);
+}
+
+/* Vigenère cipher specific input type support - extends caesar.css input styling */
+textarea, input[type="text"], input[type="number"], select {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 1rem;
+    background-color: var(--input-bg);
+    color: var(--light-color);
+    transition: border 0.3s, box-shadow 0.3s, background-color 0.3s;
+}
+
+textarea:focus, input[type="text"]:focus, input[type="number"]:focus, select:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: var(--glow-effect);
+}
+
+/* Vigenère Visualization Styles - MD5 Style */
+.shift-visualization { 
+    overflow-x: auto; 
+    margin: 2rem 0; 
+    padding: 1.5rem; 
+    background-color: rgba(0, 0, 0, 0.05); 
+    border-radius: 10px; 
+    border: 1px solid var(--border-color); 
+}
+
+.visualization-guide { 
+    text-align: center; 
+    margin-bottom: 2rem; 
+    font-size: 0.9rem; 
+    color: var(--text-muted); 
+    font-style: italic; 
+}
+
+/* Hash Step Styles */
+.hash-step {
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    box-shadow: var(--card-shadow);
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--border-color);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.step-header {
+    display: flex;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    background: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    color: white;
+    gap: 1rem;
+}
+
+.step-number {
+    background-color: rgba(255, 255, 255, 0.2);
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.step-header h4 {
+    flex: 1;
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.step-status {
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.step-status.waiting { background-color: rgba(255, 255, 255, 0.1); }
+.step-status.ready { background-color: rgba(0, 255, 0, 0.2); }
+.step-status.processing { 
+    background-color: rgba(255, 165, 0, 0.2);
+    animation: pulse 1.5s infinite;
+}
+.step-status.complete { background-color: rgba(0, 255, 0, 0.3); }
+
+.step-content {
+    padding: 1.5rem;
+}
+
+.input-breakdown {
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.data-label {
+    font-weight: 600;
+    color: var(--light-color);
+    min-width: 150px;
+    padding-top: 0.5rem;
+}
+
+.data-display {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    background-color: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-family: 'Consolas', 'Monaco', monospace;
+    color: var(--light-color);
+    word-break: break-all;
+    line-height: 1.4;
+}
+
+.pattern-text {
+    letter-spacing: 2px;
+    font-weight: 500;
+}
+
+.result-text {
+    background-color: var(--result-bg);
+    color: var(--result-text);
+    font-weight: 500;
+}
+
+/* Process Arrow */
+.process-arrow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 1rem 0;
+    color: var(--primary-color);
+}
+
+.arrow-line {
+    width: 2px;
+    height: 20px;
+    background-color: var(--primary-color);
+    margin-bottom: 5px;
+}
+
+.process-arrow i {
+    font-size: 1.5rem;
+    animation: arrowPulse 1.5s infinite;
+}
+
+@keyframes arrowPulse { 
+    0% { transform: translateY(0); } 
+    50% { transform: translateY(5px); } 
+    100% { transform: translateY(0); } 
+}
+
+/* Mapping Grid Styles */
+.mapping-grid {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.mapping-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.mapping-row {
+    display: flex;
+    border-bottom: 1px solid var(--border-color);
+    transition: background-color 0.2s ease;
+}
+
+.mapping-row:hover {
+    background-color: rgba(255, 0, 0, 0.05);
+}
+
+.mapping-header {
+    background-color: var(--secondary-color);
+    font-weight: bold;
+    position: sticky;
+    top: 0;
+    z-index: 5;
+}
+
+.mapping-cell {
+    flex: 1;
+    padding: 0.75rem;
+    text-align: center;
+    border-right: 1px solid var(--border-color);
+    font-family: 'Consolas', 'Monaco', monospace;
+}
+
+.mapping-cell:last-child {
+    border-right: none;
+}
+
+.input-char, .output-char {
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 4px;
+    padding: 0.25rem 0.5rem;
+    font-weight: bold;
+}
+
+.key-char {
+    background-color: var(--accent-color);
+    color: white;
+    border-radius: 4px;
+    padding: 0.25rem 0.5rem;
+    font-weight: bold;
+}
+
+.operation {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--light-color);
+}
+
+.more-row {
+    font-style: italic;
+    color: var(--text-muted);
+    text-align: center;
+}
+
+.mapping-info {
+    text-align: center;
+    color: var(--text-muted);
+    font-style: italic;
+    padding: 2rem;
+}
+
+.current-mapping {
+    margin-bottom: 1rem;
+}
+
+.mapping-label {
+    font-weight: 600;
+    color: var(--light-color);
+    margin-bottom: 0.5rem;
+}
+
+.mapping-display {
+    padding: 0.75rem 1rem;
+    background-color: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-family: 'Consolas', 'Monaco', monospace;
+    color: var(--light-color);
+}
+
+/* Animations */
+@keyframes stepAppear {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInRow {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes pulse { 
+    0% { transform: scale(1); opacity: 1; } 
+    50% { transform: scale(1.05); opacity: 0.8; } 
+    100% { transform: scale(1); opacity: 1; } 
+}
+
+/* Info Sections (About/Help) - Vigenère specific only if needed */
+
+/* Notification & Tooltip Styles - Vigenère specific only if needed */
+
+/* Vigenère-specific responsive adjustments only */
+@media (max-width: 768px) {
+    .mapping-row { flex-direction: column; }
+    .mapping-cell { border-right: none; border-bottom: 1px solid var(--border-color); }
+    .step-header { flex-direction: column; text-align: center; gap: 0.5rem; }
+    .input-breakdown { flex-direction: column; gap: 0.5rem; }
+    .data-label { min-width: auto; }
+}

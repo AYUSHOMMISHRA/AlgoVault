@@ -1,0 +1,1039 @@
+<!-- templates/base.html -->
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}AlgoVault{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/caesar.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="{% static 'css/mouse-follower.css' %}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+{% if request.resolver_match.url_name == "landing" %}
+    {% include "LandingMatrix.html" %}
+{% endif %}
+    <div id="mouse-follower"></div>
+    <div class="dropdown-overlay" id="dropdown-overlay"></div>
+
+    <header>
+        <div class="container">
+            <div class="navbar">
+                <div class="navbar-left">
+                    <div class="logo">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>AlgoVault</span>
+                    </div>
+                </div>
+                
+                <div class="navbar-center">
+                    <ul class="nav-links">
+                        <li><a href="{% url 'landing' %}">Home</a></li>
+                        <li><a href="{% url 'tools' %}">Tools</a></li>
+                        <li><a href="{% url 'ChatBot:chatbot' %}">AI Assistant</a></li>
+                        <li><a href="{% url 'about' %}">About</a></li>
+                        <li><a href="{% url 'help' %}">Help</a></li>
+                    </ul>
+                </div>
+                
+                <div class="navbar-right">
+                    {% if user.is_authenticated %}
+                        <div class="user-account">
+                            <div class="user-profile" id="user-profile">
+                                <div class="user-icon"><i class="fas fa-user"></i></div>
+                                <span class="username">{{ user.first_name|default:user.username }}</span>
+                                <i class="fas fa-chevron-down dropdown-arrow"></i>
+                            </div>
+                            
+                            <div class="user-dropdown" id="user-dropdown">
+                                <div class="dropdown-header">
+                                    <div class="dropdown-user-info">
+                                        <div class="dropdown-user-avatar"><i class="fas fa-user"></i></div>
+                                        <div class="dropdown-username">{{ user.first_name }} {{ user.last_name|default:"" }}</div>
+                                        <div class="dropdown-email">{{ user.email }}</div>
+                                    </div>
+                                </div>
+                            <ul class="dropdown-menu">
+                                <li class="dropdown-item"><a href="{% url 'profile_error' %}"><i class="fas fa-user-circle"></i> My Profile</a></li>
+                                <li class="dropdown-item"><a href="{% url 'account_settings_error' %}"><i class="fas fa-cog"></i> Account Settings</a></li>
+                                <li class="dropdown-item"><a href="{% url 'billing_error' %}"><i class="fas fa-credit-card"></i> Billing & Plans</a></li>
+                                <li class="dropdown-item"><a href="{% url 'security_error' %}"><i class="fas fa-shield-alt"></i> Security</a></li>
+                            </ul>
+                            <div class="dropdown-divider"></div>
+                            <ul class="dropdown-menu">
+                                <li class="dropdown-item"><a href="{% url 'help_support_error' %}"><i class="fas fa-question-circle"></i> Help & Support</a></li>
+                                <li class="dropdown-item logout-item"><a href="{% url 'UserAuth:logout' %}" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    {% else %}
+                        <div class="auth-buttons">
+                            <a href="{% url 'UserAuth:login' %}" class="btn btn-secondary">Login</a>
+                            <a href="{% url 'UserAuth:signup' %}" class="btn btn-primary">Sign Up</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    {% if active_page != 'landing' %}
+    <div class="algorithm-nav-container">
+        <nav class="algorithm-nav" aria-label="Algorithm navigation">
+            <a href="{% url 'caesar_cipher' %}" class="algorithm-nav-item">Caesar Cipher</a>
+            <a href="{% url 'hill' %}" class="algorithm-nav-item">Hill Cipher</a>
+            <a href="{% url 'playfair_error' %}" class="algorithm-nav-item playfair-disabled">Playfair Cipher</a>
+            <a href="{% url 'vigenere' %}" class="algorithm-nav-item">Vigenère Cipher</a>
+            <a href="{% url 'aes' %}" class="algorithm-nav-item aes-disabled">AES</a>
+            <a href="{% url 'des' %}" class="algorithm-nav-item">DES</a>
+            <a href="{% url 'rc5_error' %}" class="algorithm-nav-item rc5-disabled">RC5</a>
+            <a href="{% url 'md5' %}" class="algorithm-nav-item md5-disabled">MD5</a>
+            <a href="{% url 'sha512' %}" class="algorithm-nav-item">SHA-512</a>
+            <a href="{% url 'diffie_hellman' %}" class="algorithm-nav-item">Diffie-Hellman</a>
+            <a href="{% url 'hmac' %}" class="algorithm-nav-item">HMAC</a>
+        </nav>
+    </div>
+    {% endif %}
+
+    <div class="theme-toggle-buttons">
+        <button id="theme-toggle-btn" aria-label="Toggle light and dark mode" title="Toggle light and dark mode" class="btn">
+            <i id="theme-toggle-icon" class="fas fa-moon"></i>
+        </button>
+    </div>
+
+    {% block content %}{% endblock %}
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 class="footer-title">AlgoVault</h3>
+                    <p>Professional cryptographic tools for educational and practical purposes. Learn about encryption while securing your communications.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3 class="footer-title">Quick Links</h3>
+                    <div class="footer-links">
+                        <a href="#home">Home</a>
+                        <a href="#tools">Cipher Tool</a>
+                        <a href="#about">About Caesar Cipher</a>
+                        <a href="#help">How to Use</a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3 class="footer-title">Resources</h3>
+                    <div class="footer-links">
+                        <a href="#">Cryptography Basics</a>
+                        <a href="#">History of Encryption</a>
+                        <a href="#">Modern Encryption Methods</a>
+                        <a href="#">Security Best Practices</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 AlgoVault. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // UI Elements
+        const userProfile = document.getElementById('user-profile');
+        const userDropdown = document.getElementById('user-dropdown');
+        const dropdownOverlay = document.getElementById('dropdown-overlay');
+        const logoutBtn = document.getElementById('logout-btn');
+        const themeToggleBtn = document.getElementById('theme-toggle-btn');
+        const themeToggleIcon = document.getElementById('theme-toggle-icon');
+        const notification = document.getElementById('notification');
+
+        // --- Theme Toggle Functionality ---
+        function setTheme(isDark) {
+            if (isDark) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+                themeToggleIcon.classList.remove('fa-sun');
+                themeToggleIcon.classList.add('fa-moon');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+                themeToggleIcon.classList.remove('fa-moon');
+                themeToggleIcon.classList.add('fa-sun');
+            }
+        }
+
+        const savedTheme = localStorage.getItem('theme');
+        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+        if (savedTheme === 'light') setTheme(false);
+        else if (savedTheme === 'dark' || prefersDarkScheme.matches) setTheme(true);
+        else setTheme(true);
+
+        themeToggleBtn.addEventListener('click', function() {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            setTheme(!isDark);
+            document.body.classList.add('theme-transition');
+            setTimeout(() => document.body.classList.remove('theme-transition'), 1000);
+            showNotification(!isDark ? 'Dark mode activated' : 'Light mode activated', 'success');
+        });
+
+        // --- User Dropdown Functionality ---
+        function openDropdown() {
+            userDropdown.classList.add('show');
+            userProfile.classList.add('active');
+            dropdownOverlay.classList.add('show');
+        }
+
+        function closeDropdown() {
+            userDropdown.classList.remove('show');
+            userProfile.classList.remove('active');
+            dropdownOverlay.classList.remove('show');
+        }
+
+        userProfile.addEventListener('click', (e) => {
+            e.stopPropagation();
+            userDropdown.classList.contains('show') ? closeDropdown() : openDropdown();
+        });
+        
+        dropdownOverlay.addEventListener('click', closeDropdown);
+        document.addEventListener('click', (e) => {
+            if (!userProfile.contains(e.target) && !userDropdown.contains(e.target)) {
+                closeDropdown();
+            }
+        });
+
+        logoutBtn.addEventListener('click', (e) => {
+            showNotification('Logging out...', 'success');
+            closeDropdown();
+            // Let the default action proceed (navigate to logout URL)
+            // The actual logout is handled by Django backend
+        });
+        
+        // --- Notification ---
+        function showNotification(message, type) {
+            if (!notification) return;
+            notification.textContent = message;
+            notification.className = 'notification ' + type;
+            notification.style.display = 'block';
+            notification.style.opacity = '0';
+            notification.style.transform = 'translateY(-10px)';
+            setTimeout(() => {
+                notification.style.opacity = '1';
+                notification.style.transform = 'translateY(0)';
+            }, 10);
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateY(-10px)';
+                setTimeout(() => { notification.style.display = 'none'; }, 300);
+            }, 3000);
+        }
+    });
+    </script>
+    
+    <!-- Floating Chat Widget -->
+    <div id="floating-chat-widget" class="floating-chat-widget">
+        <!-- Chat Button -->
+        <button id="chat-toggle-btn" class="chat-toggle-btn" title="Open AI Assistant">
+            <i class="fas fa-robot" id="chat-icon"></i>
+            <i class="fas fa-times" id="close-icon" style="display: none;"></i>
+        </button>
+        
+        <!-- Chat Modal -->
+        <div id="chat-modal" class="chat-modal">
+            <div class="chat-modal-header">
+                <div class="chat-header-info">
+                    <div class="chat-avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="chat-header-text">
+                        <h4>VaultAI</h4>
+                        <span>Ask me about cryptography</span>
+                    </div>
+                </div>
+                <button id="chat-close-btn" class="chat-close-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="chat-modal-body">
+                <div class="chat-messages-mini" id="chatMessagesMini">
+                    <div class="message bot-message">
+                        <div class="message-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="message-content">
+                            <div class="message-bubble">
+                                <p>Hi! I'm your AI cryptography assistant. Ask me anything about algorithms, encryption, or security concepts!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="typing-indicator-mini" id="typingIndicatorMini" style="display: none;">
+                    <div class="message-avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="typing-content">
+                        <div class="typing-bubble">
+                            <div class="typing-dots">
+                                <span></span>
+                                <span></span>
+                                <span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chat-modal-footer">
+                <div class="chat-input-wrapper">
+                    <input type="text" id="chatInputMini" placeholder="Ask me about cryptography..." maxlength="500">
+                    <button id="chatSendMini" class="chat-send-btn">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+                <div class="chat-footer-links">
+                    <a href="{% url 'ChatBot:chatbot' %}" class="full-chat-link">
+                        <i class="fas fa-expand"></i> Open Full Chat
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <style>
+    /* Floating Chat Widget Styles */
+    .floating-chat-widget {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 1000;
+    }
+    
+    .chat-toggle-btn {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        border: none;
+        background: linear-gradient(135deg, var(--primary-color, #ff0000), #ff6b6b);
+        color: white;
+        font-size: 1.5rem;
+        cursor: pointer;
+        box-shadow: 0 4px 20px rgba(255, 0, 0, 0.3);
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .chat-toggle-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 25px rgba(255, 0, 0, 0.4);
+    }
+    
+    .chat-modal {
+        position: absolute;
+        bottom: 80px;
+        right: 0;
+        width: 350px;
+        height: 500px;
+        background: var(--card-bg, white);
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        border: 1px solid var(--border-color, #e0e0e0);
+        display: none;
+        flex-direction: column;
+        overflow: hidden;
+    }
+    
+    .chat-modal.show {
+        display: flex;
+        animation: slideUp 0.3s ease;
+    }
+    
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .chat-modal-header {
+        background: linear-gradient(135deg, var(--primary-color, #ff0000), #ff6b6b);
+        color: white;
+        padding: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .chat-header-info {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+    
+    .chat-avatar {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .chat-header-text h4 {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 600;
+    }
+    
+    .chat-header-text span {
+        font-size: 0.8rem;
+        opacity: 0.9;
+    }
+    
+    .chat-close-btn {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.2rem;
+        cursor: pointer;
+        padding: 0.25rem;
+        border-radius: 50%;
+        transition: background 0.2s ease;
+    }
+    
+    .chat-close-btn:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
+    
+    .chat-modal-body {
+        flex: 1;
+        padding: 1rem;
+        overflow-y: auto;
+        background: var(--body-bg, #f8f9fa);
+    }
+    
+    .chat-messages-mini {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .chat-messages-mini .message {
+        display: flex;
+        gap: 0.5rem;
+        animation: slideIn 0.3s ease;
+    }
+    
+    .chat-messages-mini .user-message {
+        flex-direction: row-reverse;
+    }
+    
+    .chat-messages-mini .message-avatar {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9rem;
+        flex-shrink: 0;
+    }
+    
+    .chat-messages-mini .bot-message .message-avatar {
+        background: linear-gradient(135deg, var(--primary-color, #ff0000), #ff6b6b);
+        color: white;
+    }
+    
+    .chat-messages-mini .user-message .message-avatar {
+        background: var(--secondary-color, #f0f0f0);
+        color: var(--text-color, #333);
+    }
+    
+    .chat-messages-mini .message-bubble {
+        background: var(--card-bg, white);
+        padding: 0.75rem;
+        border-radius: 12px;
+        border: 1px solid var(--border-color, #e0e0e0);
+        font-size: 0.9rem;
+        line-height: 1.4;
+    }
+    
+    /* Enhanced message formatting styles */
+    .chat-messages-mini .message-bubble ul,
+    .chat-messages-mini .message-bubble ol {
+        margin: 0.5rem 0;
+        padding-left: 1.25rem;
+    }
+    
+    .chat-messages-mini .message-bubble li {
+        margin: 0.25rem 0;
+        line-height: 1.4;
+    }
+    
+    .chat-messages-mini .message-bubble .quiz-options {
+        list-style: none;
+        padding-left: 0;
+    }
+    
+    .chat-messages-mini .message-bubble .quiz-options li {
+        margin: 0.4rem 0;
+        padding: 0.25rem 0;
+        border-bottom: 1px solid rgba(0,0,0,0.1);
+    }
+    
+    .chat-messages-mini .message-bubble .quiz-options li:last-child {
+        border-bottom: none;
+    }
+    
+    .chat-messages-mini .message-bubble p {
+        margin: 0.4rem 0;
+        line-height: 1.5;
+    }
+    
+    .chat-messages-mini .message-bubble h1,
+    .chat-messages-mini .message-bubble h2,
+    .chat-messages-mini .message-bubble h3,
+    .chat-messages-mini .message-bubble h4,
+    .chat-messages-mini .message-bubble h5,
+    .chat-messages-mini .message-bubble h6 {
+        margin: 0.8rem 0 0.4rem 0;
+        font-weight: 600;
+        font-size: 1rem;
+    }
+    
+    .chat-messages-mini .user-message .message-bubble {
+        background: linear-gradient(135deg, var(--primary-color, #ff0000), #ff6b6b);
+        color: white;
+        border: none;
+    }
+    
+    .typing-indicator-mini {
+        display: flex;
+        gap: 0.5rem;
+        animation: slideIn 0.3s ease;
+    }
+    
+    .typing-indicator-mini .typing-bubble {
+        background: var(--card-bg, white);
+        padding: 0.75rem;
+        border-radius: 12px;
+        border: 1px solid var(--border-color, #e0e0e0);
+    }
+    
+    .typing-indicator-mini .typing-dots {
+        display: flex;
+        gap: 3px;
+    }
+    
+    .typing-indicator-mini .typing-dots span {
+        width: 6px;
+        height: 6px;
+        background: var(--primary-color, #ff0000);
+        border-radius: 50%;
+        animation: typingAnimation 1.4s infinite;
+    }
+    
+    .typing-indicator-mini .typing-dots span:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+    
+    .typing-indicator-mini .typing-dots span:nth-child(3) {
+        animation-delay: 0.4s;
+    }
+    
+    .chat-modal-footer {
+        border-top: 1px solid var(--border-color, #e0e0e0);
+        padding: 1rem;
+        background: var(--card-bg, white);
+    }
+    
+    .chat-input-wrapper {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 0.75rem;
+    }
+    
+    #chatInputMini {
+        flex: 1;
+        border: 1px solid var(--border-color, #e0e0e0);
+        border-radius: 20px;
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+        background: var(--input-bg, white);
+        color: white;
+    }
+    
+    #chatInputMini:focus {
+        outline: none;
+        border-color: var(--primary-color, #ff0000);
+    }
+    
+    .chat-send-btn {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        border: none;
+        background: linear-gradient(135deg, var(--primary-color, #ff0000), #ff6b6b);
+        color: white;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.2s ease;
+    }
+    
+    .chat-send-btn:hover {
+        transform: scale(1.05);
+    }
+    
+    .chat-footer-links {
+        text-align: center;
+    }
+    
+    .full-chat-link {
+        color: var(--primary-color, #ff0000);
+        text-decoration: none;
+        font-size: 0.8rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+        transition: opacity 0.2s ease;
+    }
+    
+    .full-chat-link:hover {
+        opacity: 0.8;
+    }
+    
+    /* Hide on chatbot page */
+    .floating-chat-widget.hide-on-chatbot {
+        display: none !important;
+    }
+    
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+        .chat-modal {
+            width: 300px;
+            height: 450px;
+        }
+        
+        .floating-chat-widget {
+            bottom: 15px;
+            right: 15px;
+        }
+        
+        .chat-toggle-btn {
+            width: 55px;
+            height: 55px;
+            font-size: 1.3rem;
+        }
+    }
+    </style>
+    
+    <script>
+    // Floating Chat Widget JavaScript
+    document.addEventListener('DOMContentLoaded', function() {
+        const chatToggleBtn = document.getElementById('chat-toggle-btn');
+        const chatModal = document.getElementById('chat-modal');
+        const chatCloseBtn = document.getElementById('chat-close-btn');
+        const chatIcon = document.getElementById('chat-icon');
+        const closeIcon = document.getElementById('close-icon');
+        const chatInputMini = document.getElementById('chatInputMini');
+        const chatSendMini = document.getElementById('chatSendMini');
+        const chatMessagesMini = document.getElementById('chatMessagesMini');
+        const typingIndicatorMini = document.getElementById('typingIndicatorMini');
+        
+        let isOpen = false;
+        let conversationHistory = []; // Conversation memory for chat widget
+        
+        // Enhanced bot message formatting function (same as in chatbot.js)
+        function formatBotMessage(content) {
+            // Remove excessive emojis at the start of lines
+            content = content.replace(/^[🎯🔧✅❌⚡🚀📊🎨🔍💡🎉🎪⭐🔥📝🎭🎵🌟💫⭐️🔍📚🎓💻🔐🎯🎪🎨🎊🎈🎁🌈💎🎀🎊]+\s*/gm, '');
+            
+            // Clean up excessive bold formatting
+            content = content.replace(/\*\*[\-\s]*\*\*/g, '');
+            
+            // Convert markdown-like formatting to HTML
+            content = content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            content = content.replace(/\*(.*?)\*/g, '<em>$1</em>');
+            
+            // Split content into lines for processing
+            const lines = content.split('\n');
+            let formatted = '';
+            let inList = false;
+            let inOrderedList = false;
+            let currentParagraph = '';
+            
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].trim();
+                
+                if (!line) {
+                    // Empty line - end current paragraph/list
+                    if (inList) {
+                        formatted += '</ul>';
+                        inList = false;
+                    } else if (inOrderedList) {
+                        formatted += '</ol>';
+                        inOrderedList = false;
+                    } else if (currentParagraph) {
+                        formatted += `<p>${currentParagraph.trim()}</p>`;
+                        currentParagraph = '';
+                    }
+                    continue;
+                }
+                
+                // Check for quiz options (A) B) C) D) format
+                if (/^[A-D]\)\s/.test(line)) {
+                    if (!inList) {
+                        if (currentParagraph) {
+                            formatted += `<p>${currentParagraph.trim()}</p>`;
+                            currentParagraph = '';
+                        }
+                        formatted += '<ul class="quiz-options">';
+                        inList = true;
+                    }
+                    const optionText = line.substring(2).trim();
+                    formatted += `<li><strong>${line.charAt(0)}</strong>) ${optionText}</li>`;
+                    continue;
+                }
+                
+                // Check for numbered lists (1. 2. 3.)
+                if (/^\d+\.\s/.test(line)) {
+                    if (!inOrderedList) {
+                        if (currentParagraph) {
+                            formatted += `<p>${currentParagraph.trim()}</p>`;
+                            currentParagraph = '';
+                        }
+                        if (inList) {
+                            formatted += '</ul>';
+                            inList = false;
+                        }
+                        formatted += '<ol>';
+                        inOrderedList = true;
+                    }
+                    const listText = line.replace(/^\d+\.\s/, '');
+                    formatted += `<li>${listText}</li>`;
+                    continue;
+                }
+                
+                // Check for bullet points (- or •)
+                if (/^[-•]\s/.test(line)) {
+                    if (!inList) {
+                        if (currentParagraph) {
+                            formatted += `<p>${currentParagraph.trim()}</p>`;
+                            currentParagraph = '';
+                        }
+                        if (inOrderedList) {
+                            formatted += '</ol>';
+                            inOrderedList = false;
+                        }
+                        formatted += '<ul>';
+                        inList = true;
+                    }
+                    const listText = line.replace(/^[-•]\s/, '');
+                    formatted += `<li>${listText}</li>`;
+                    continue;
+                }
+                
+                // Check for headers
+                if (line.startsWith('#')) {
+                    if (inList) {
+                        formatted += '</ul>';
+                        inList = false;
+                    } else if (inOrderedList) {
+                        formatted += '</ol>';
+                        inOrderedList = false;
+                    } else if (currentParagraph) {
+                        formatted += `<p>${currentParagraph.trim()}</p>`;
+                        currentParagraph = '';
+                    }
+                    
+                    const level = line.match(/^#+/)[0].length;
+                    const text = line.replace(/^#+\s*/, '');
+                    formatted += `<h${Math.min(level, 6)}>${text}</h${Math.min(level, 6)}>`;
+                    continue;
+                }
+                
+                // Regular text - add to current paragraph
+                if (inList || inOrderedList) {
+                    // If we're in a list but this isn't a list item, close the list
+                    if (inList) {
+                        formatted += '</ul>';
+                        inList = false;
+                    } else if (inOrderedList) {
+                        formatted += '</ol>';
+                        inOrderedList = false;
+                    }
+                }
+                
+                if (currentParagraph) {
+                    currentParagraph += ' ' + line;
+                } else {
+                    currentParagraph = line;
+                }
+            }
+            
+            // Close any remaining open elements
+            if (inList) {
+                formatted += '</ul>';
+            } else if (inOrderedList) {
+                formatted += '</ol>';
+            } else if (currentParagraph) {
+                formatted += `<p>${currentParagraph.trim()}</p>`;
+            }
+            
+            return formatted || `<p>${content}</p>`;
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        function toggleChat() {
+            isOpen = !isOpen;
+            if (isOpen) {
+                chatModal.classList.add('show');
+                chatIcon.style.display = 'none';
+                closeIcon.style.display = 'block';
+                if (chatInputMini) chatInputMini.focus();
+            } else {
+                chatModal.classList.remove('show');
+                chatIcon.style.display = 'block';
+                closeIcon.style.display = 'none';
+            }
+        }
+        
+        function createMessage(content, isUser = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user-message' : 'bot-message'}`;
+            
+            messageDiv.innerHTML = `
+                <div class="message-avatar">
+                    <i class="fas ${isUser ? 'fa-user' : 'fa-robot'}"></i>
+                </div>
+                <div class="message-content">
+                    <div class="message-bubble">
+                        ${isUser ? `<p>${escapeHtml(content)}</p>` : formatBotMessage(content)}
+                    </div>
+                </div>
+            `;
+            
+            return messageDiv;
+        }
+        
+        function scrollToBottom() {
+            if (chatMessagesMini) {
+                chatMessagesMini.scrollTop = chatMessagesMini.scrollHeight;
+            }
+        }
+        
+        function showTyping() {
+            if (typingIndicatorMini) {
+                typingIndicatorMini.style.display = 'flex';
+                scrollToBottom();
+            }
+        }
+        
+        function hideTyping() {
+            if (typingIndicatorMini) {
+                typingIndicatorMini.style.display = 'none';
+            }
+        }
+        
+        async function sendMessage(message) {
+            try {
+                const response = await fetch('/api/chat/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken')
+                    },
+                    body: JSON.stringify({ 
+                        message: message,
+                        history: conversationHistory
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to get response');
+                }
+
+                // Add user message and AI response to conversation history
+                conversationHistory.push({role: "user", content: message});
+                conversationHistory.push({role: "assistant", content: data.response});
+
+                // Keep conversation history manageable (last 20 messages)
+                if (conversationHistory.length > 20) {
+                    conversationHistory = conversationHistory.slice(-20);
+                }
+                
+                return data.response;
+            } catch (error) {
+                console.error('Error sending message:', error);
+                throw error;
+            }
+        }
+        
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        
+        async function handleSendMessage() {
+            if (!chatInputMini) return;
+            
+            const message = chatInputMini.value.trim();
+            if (!message) return;
+            
+            // Add user message
+            const userMessage = createMessage(message, true);
+            if (chatMessagesMini) {
+                chatMessagesMini.appendChild(userMessage);
+            }
+            
+            // Clear input
+            chatInputMini.value = '';
+            
+            // Show typing indicator
+            showTyping();
+            
+            try {
+                // Send message to API
+                const response = await sendMessage(message);
+                
+                // Hide typing indicator
+                hideTyping();
+                
+                // Add bot response
+                const botMessage = createMessage(response, false);
+                if (chatMessagesMini) {
+                    chatMessagesMini.appendChild(botMessage);
+                }
+                
+            } catch (error) {
+                hideTyping();
+                
+                // Show error message
+                const errorMessage = createMessage(
+                    'Sorry, I encountered an error. Please try again.',
+                    false
+                );
+                if (chatMessagesMini) {
+                    chatMessagesMini.appendChild(errorMessage);
+                }
+            } finally {
+                scrollToBottom();
+            }
+        }
+        
+        // Event listeners
+        if (chatToggleBtn) chatToggleBtn.addEventListener('click', toggleChat);
+        if (chatCloseBtn) chatCloseBtn.addEventListener('click', toggleChat);
+        
+        if (chatSendMini) chatSendMini.addEventListener('click', handleSendMessage);
+        
+        if (chatInputMini) {
+            chatInputMini.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSendMessage();
+                }
+            });
+        }
+        
+        // Close chat when clicking outside
+        document.addEventListener('click', function(e) {
+            const chatWidget = document.getElementById('floating-chat-widget');
+            if (isOpen && chatWidget && !chatWidget.contains(e.target)) {
+                toggleChat();
+            }
+        });
+    });
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+<script>
+// Smooth mouse follower effect
+const follower = document.getElementById('mouse-follower');
+let mouseX = window.innerWidth / 2;
+let mouseY = window.innerHeight / 2;
+let currentX = mouseX;
+let currentY = mouseY;
+const speed = 0.08; // Slower speed for more natural trailing effect
+
+document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+});
+
+// Interactive scaling for click and hover
+let isMouseDown = false;
+let isHovering = false;
+
+document.addEventListener('mousedown', () => {
+    isMouseDown = true;
+    follower.style.transform = 'translate(-50%, -50%) scale(0.7)';
+    follower.style.opacity = '0.7';
+});
+document.addEventListener('mouseup', () => {
+    isMouseDown = false;
+    follower.style.transform = 'translate(-50%, -50%) scale(1)';
+    follower.style.opacity = '1';
+});
+
+document.querySelectorAll('a, button, input, textarea').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+        isHovering = true;
+        follower.style.transform = 'translate(-50%, -50%) scale(1.3)';
+        follower.style.opacity = '0.5';
+    });
+    el.addEventListener('mouseleave', () => {
+        isHovering = false;
+        follower.style.transform = isMouseDown ? 'translate(-50%, -50%) scale(0.7)' : 'translate(-50%, -50%) scale(1)';
+        follower.style.opacity = isMouseDown ? '0.7' : '1';
+    });
+});
+
+function animateFollower() {
+    currentX += (mouseX - currentX) * speed;
+    currentY += (mouseY - currentY) * speed;
+    follower.style.left = currentX + 'px';
+    follower.style.top = currentY + 'px';
+    requestAnimationFrame(animateFollower);
+}
+animateFollower();
+</script>
+</body>
+</html>
+
